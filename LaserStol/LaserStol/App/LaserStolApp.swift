@@ -51,7 +51,8 @@ struct RootView: View {
                 window.title = "Лазерный стол"
                 window.titleVisibility = .hidden
                 window.titlebarAppearsTransparent = true
-                window.isMovableByWindowBackground = true
+                // Окно двигается только за кастомный заголовок, не за холст и не за крем.
+                window.isMovableByWindowBackground = false
                 window.toolbarStyle = .unifiedCompact
             })
             .sheet(item: $app.sheet) { sheet in

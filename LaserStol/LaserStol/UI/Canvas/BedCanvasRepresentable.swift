@@ -11,6 +11,9 @@ struct BedCanvasRepresentable: NSViewRepresentable {
 
     func updateNSView(_ nsView: BedCanvasView, context: Context) {
         nsView.app = app
+        if nsView.window?.isMovableByWindowBackground == true {
+            nsView.window?.isMovableByWindowBackground = false
+        }
         nsView.needsDisplay = true
     }
 }

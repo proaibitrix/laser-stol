@@ -31,8 +31,10 @@ struct TitleBar: View {
 
     var body: some View {
         ZStack {
+            WindowDragRegion()
             HStack {
                 Color.clear.frame(width: 68, height: 12)
+                    .allowsHitTesting(false)
                 Spacer()
                 ConnectionChip()
                     .padding(.trailing, 16)
@@ -45,6 +47,7 @@ struct TitleBar: View {
                     .font(.system(size: 10))
                     .foregroundColor(Theme.mute)
             }
+            .allowsHitTesting(false)
         }
         .frame(height: 46)
         .padding(.top, 8)

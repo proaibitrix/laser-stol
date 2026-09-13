@@ -152,3 +152,38 @@ struct WindowAccessor: NSViewRepresentable {
         window.backgroundColor = Theme.nsCream
     }
 }
+
+/// Полоса, за которую можно перетащить окно (скрытый title bar).
+struct WindowDragRegion: NSViewRepresentable {
+    var leadingReserved: CGFloat = 72
+
+    func makeNSView(context: Context) -> WindowDragView {
+        let view = WindowDragView()
+        view.leadingReserved = leadingReserved
+        return view
+    }
+
+    func updateNSView(_ nsView: WindowDragView, context: Context) {
+        nsView.leadingReserved = leadingReserved
+    }
+}
+
+final class WindowDragView: NSView {
+    var leadingReserved: CGFloat = 72
+
+    override var isOpaque: Bool { false }
+    override var mouseDownCanMoveWindow: Bool { true }
+
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        guard bounds.contains(point), point.x >= leadingReserved else { return nil }
+        return self
+    }
+
+    override func mouseDown(with event: NSEvent) {
+        let loc = convert(event.locationInWindow, from: nil)
+        guard loc.x >= leadingReserved else { return }
+        window?.performWindowDrag(with: event)
+    }
+}

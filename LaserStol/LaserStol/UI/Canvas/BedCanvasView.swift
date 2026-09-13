@@ -18,12 +18,21 @@ final class BedCanvasView: NSView {
 
     override var isFlipped: Bool { false }
     override var acceptsFirstResponder: Bool { true }
+    override var isOpaque: Bool { true }
+    override var mouseDownCanMoveWindow: Bool { false }
+
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        bounds.contains(point) ? self : nil
+    }
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
         wantsLayer = true
         layer?.cornerRadius = 18
         layer?.masksToBounds = true
+        window?.isMovableByWindowBackground = false
     }
 
     override func draw(_ dirtyRect: NSRect) {
@@ -318,36 +327,41 @@ final class BedCanvasView: NSView {
         guard let app = app else { return }
         let loc = convert(event.locationInWindow, from: nil)
         let mm = mmPoint(from: loc)
+        var shouldTrack = false
 
         if app.tool == .contour {
             drag = .draw
             app.contourDraft = [mm]
             needsDisplay = true
-            return
-        }
-
-        if let id = app.selectedIDs.first, let item = app.document.item(id: id) {
+            shouldTrack = true
+        } else if let id = app.selectedIDs.first, let item = app.document.item(id: id) {
             let r = nsRect(from: item.transform.axisAlignedBounds)
             let rot = NSPoint(x: r.midX, y: r.minY - 18)
             if hypot(loc.x - rot.x, loc.y - rot.y) < 10 {
                 beginDrag(.rotate, mm: mm)
-                return
+                shouldTrack = true
+            } else if let handle = handleIndex(at: loc, in: r) {
+                beginDrag(.scale(handle: handle), mm: mm)
+                shouldTrack = true
+            } else if let hit = hitItem(at: mm) {
+                app.select(hit.id, additive: event.modifierFlags.contains(.shift))
+                beginDrag(.move, mm: mm)
+                shouldTrack = true
+            } else {
+                app.select(nil)
             }
-            for (index, p) in handlePoints(r).enumerated() {
-                if hypot(loc.x - p.x, loc.y - p.y) < 9 {
-                    beginDrag(.scale(handle: index), mm: mm)
-                    return
-                }
-            }
-        }
-
-        if let hit = hitItem(at: mm) {
+        } else if let hit = hitItem(at: mm) {
             app.select(hit.id, additive: event.modifierFlags.contains(.shift))
             beginDrag(.move, mm: mm)
+            shouldTrack = true
         } else {
             app.select(nil)
         }
+
         needsDisplay = true
+        if shouldTrack {
+            trackUntilMouseUp()
+        }
     }
 
     override func mouseDragged(with event: NSEvent) {
@@ -416,11 +430,39 @@ final class BedCanvasView: NSView {
         }
     }
 
+    /// Забираем drag в tracking loop, чтобы AppKit не утащил окно и SwiftUI не съел события.
+    private func trackUntilMouseUp() {
+        guard let window = window else { return }
+        while true {
+            guard let next = window.nextEvent(
+                matching: [.leftMouseDragged, .leftMouseUp],
+                until: Date.distantFuture,
+                inMode: .eventTracking,
+                dequeue: true
+            ) else { break }
+            if next.type == .leftMouseUp {
+                mouseUp(with: next)
+                break
+            }
+            mouseDragged(with: next)
+        }
+    }
+
+    private func handleIndex(at loc: NSPoint, in r: NSRect) -> Int? {
+        for (index, p) in handlePoints(r).enumerated() {
+            if hypot(loc.x - p.x, loc.y - p.y) < 9 {
+                return index
+            }
+        }
+        return nil
+    }
+
     private func hitItem(at mm: MMPoint) -> DesignItem? {
         guard let app = app else { return nil }
+        let slop = 2.0
         return app.document.items.reversed().first { item in
             guard let layer = app.document.layer(id: item.layerID), layer.isVisible else { return false }
-            return item.transform.axisAlignedBounds.contains(mm)
+            return item.transform.axisAlignedBounds.inset(by: -slop).contains(mm)
         }
     }
 }

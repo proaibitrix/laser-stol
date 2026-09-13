@@ -405,6 +405,16 @@ final class SVGTests: XCTestCase {
     }
 }
 
+final class CanvasHitTests: XCTestCase {
+    func testCanvasRefusesWindowBackgroundDrag() {
+        let view = BedCanvasView()
+        XCTAssertFalse(view.mouseDownCanMoveWindow)
+        XCTAssertTrue(view.acceptsFirstResponder)
+        XCTAssertTrue(view.isOpaque)
+        XCTAssertTrue(view.acceptsFirstMouse(for: nil))
+    }
+}
+
 final class StrengthTests: XCTestCase {
     func testMultipliers() {
         XCTAssertLessThan(ProcessStrength.weak.powerMultiplier, ProcessStrength.medium.powerMultiplier)
