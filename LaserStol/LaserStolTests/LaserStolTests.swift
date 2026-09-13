@@ -162,9 +162,53 @@ final class DocumentTests: XCTestCase {
 
     func testDemoFitsBed() {
         let demo = DemoProject.make()
-        XCTAssertGreaterThan(demo.items.count, 10)
+        XCTAssertEqual(demo.items.count, 1)
         XCTAssertTrue(demo.itemsFitBed())
         XCTAssertEqual(demo.layers.count, 2)
+        if case .text(let payload) = demo.items[0].content {
+            XCTAssertEqual(payload.text, "A")
+        } else {
+            XCTFail("ожидалась одна буква-подсказка")
+        }
+        XCTAssertLessThan(demo.items[0].transform.centerX, 80)
+        XCTAssertLessThan(demo.items[0].transform.centerY, 80)
+    }
+
+    func testLegacyLetterGridDetection() {
+        var doc = ProjectDocument()
+        doc.ensureDefaultLayers()
+        let burn = doc.layer(kind: .burn)!.id
+        let cut = doc.layer(kind: .cut)!.id
+        let letters = [
+            "A", "M", "K", "R", "D",
+            "V", "Y", "S", "Q", "L",
+            "V", "R", "E", "N", "R",
+            "B", "B", "E", "S", "T",
+            "N", "P", "G", "T", "H"
+        ]
+        for letter in letters {
+            doc.upsert(DesignItem(
+                layerID: burn,
+                name: letter,
+                transform: ItemTransform(centerX: 40, centerY: 40, width: 28, height: 28),
+                content: .text(TextPayload(text: letter))
+            ))
+            doc.upsert(DesignItem(
+                layerID: cut,
+                name: "Контур \(letter)",
+                transform: ItemTransform(centerX: 40, centerY: 40, width: 48, height: 48),
+                content: .shape(ShapePayload(kind: .rectangle))
+            ))
+        }
+        XCTAssertTrue(DemoProject.looksLikeLegacyLetterGrid(doc))
+        XCTAssertFalse(DemoProject.looksLikeLegacyLetterGrid(DemoProject.make()))
+        doc.upsert(DesignItem(
+            layerID: burn,
+            name: "своё",
+            transform: ItemTransform(centerX: 100, centerY: 100, width: 20, height: 20),
+            content: .text(TextPayload(text: "своё"))
+        ))
+        XCTAssertFalse(DemoProject.looksLikeLegacyLetterGrid(doc))
     }
 
     func testJobBuilderWholeSheet() {
@@ -178,12 +222,12 @@ final class DocumentTests: XCTestCase {
         })
         XCTAssertTrue(job.errors.isEmpty)
         XCTAssertTrue(job.gcode.contains("G90"))
-        XCTAssertTrue(job.gcode.contains("Слой Рез") || job.gcode.contains("G1"))
-        XCTAssertGreaterThan(job.lineCount, 20)
+        XCTAssertTrue(job.gcode.contains("G1"))
+        XCTAssertGreaterThan(job.lineCount, 8)
         XCTAssertGreaterThan(job.estimatedSeconds, 0)
-        XCTAssertEqual(job.burnTextCount, 25)
-        XCTAssertTrue(job.preflightSummary.contains("Прожиг: 25 объектов"))
-        XCTAssertTrue(job.preflightSummary.contains("текст: 25"))
+        XCTAssertEqual(job.burnTextCount, 1)
+        XCTAssertTrue(job.preflightSummary.contains("Прожиг: 1 объектов"))
+        XCTAssertTrue(job.preflightSummary.contains("текст: 1"))
     }
 
     func testJobBuilderBurnsImportedImage() {

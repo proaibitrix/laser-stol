@@ -58,7 +58,7 @@ final class AppState: ObservableObject {
     private var machineBag = Set<AnyCancellable>()
 
     init(document: ProjectDocument = ProjectDocument()) {
-        if let saved = ProjectStore.load(), !saved.items.isEmpty {
+        if let saved = ProjectStore.load(), !saved.items.isEmpty, !DemoProject.looksLikeLegacyLetterGrid(saved) {
             self.document = saved
         } else if document.items.isEmpty {
             self.document = DemoProject.make()
