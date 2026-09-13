@@ -1,0 +1,643 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E3702420182240A18149119D /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B46BCCCB418FB8441F7FC /* AppState.swift */; };
+		53291510C69F5741F7CC8125 /* LaserStolApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 766136FCC8E2A4C8209D007B /* LaserStolApp.swift */; };
+		B148D0D78F07158442383809 /* DemoProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE4E0552C48B4F465F3A1A2 /* DemoProject.swift */; };
+		8575F402467226DD8A8E5DB7 /* DesignItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C97841467904DEDA0C1FC08 /* DesignItem.swift */; };
+		EF69DBA60EBC4E0DC04CC6F2 /* GeometryTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF5B346754268EAC35A911A /* GeometryTypes.swift */; };
+		D77EC5220866B1C9BE626B0F /* LaserLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3709D89124A7E5D2824FA4AE /* LaserLayer.swift */; };
+		715EBE643E6F2BC18F4BC195 /* MaterialPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2DF499371F467284B6338A /* MaterialPreset.swift */; };
+		68DBB376FC8082E3FA75F86C /* MonogramLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE52B9853B2A5D8BF6A214F /* MonogramLibrary.swift */; };
+		949B2A40C577C0F0A6A13BBF /* ProjectDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F41F89775BFF2E5BC7025BF /* ProjectDocument.swift */; };
+		F4C4EFBFA4234392D8560C6B /* GCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C99EA67D8A3E3A9334C61BB /* GCodeGenerator.swift */; };
+		BBC2878E4DBE4817E63C4FAD /* JobBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A5F537E877A40E527CAE17 /* JobBuilder.swift */; };
+		796F2D301AC0805E774AF4B7 /* PixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A65828ABB8C77BFBDCC6AA1 /* PixelBuffer.swift */; };
+		D9B038B165971BFFCB603471 /* TimeEstimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4121F7D0860FBF624A34EFED /* TimeEstimator.swift */; };
+		8F1AD996DA4CE7DA987528F0 /* ImageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755CDA90941AAAFA475F9D69 /* ImageProcessor.swift */; };
+		D1242D97B9E74E745F21E5BB /* GRBLController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAF83A08DB89F2537611E2D /* GRBLController.swift */; };
+		726807D2FF5CBAFE1930B8A1 /* GRBLTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FD6810C4B2EAD87E3199CA /* GRBLTransport.swift */; };
+		82CDD9C55DDAAC9AB6A7850C /* MockGRBLTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A508EFBC43AC9C54F5BC2E6D /* MockGRBLTransport.swift */; };
+		393D917B0202E22C5AF55E90 /* SerialPortTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7010BC0971C444F3668A8F1 /* SerialPortTransport.swift */; };
+		B6879B3ACE5A682324B83840 /* ProjectStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDFEBE4C8A118EBE8D8C491 /* ProjectStore.swift */; };
+		DEEB3C0A860E8CA31DE41006 /* SVGImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92D7B1973948BF986067F4 /* SVGImporter.swift */; };
+		18ACFA515F237EA6F94FBD1A /* BedCanvasRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76860E28F94586C7D1CF0127 /* BedCanvasRepresentable.swift */; };
+		6734BF9882C0FAFE3F196D11 /* BedCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D1B4B619673DDF04BD9B3C /* BedCanvasView.swift */; };
+		E967678D0458502ADAA124F2 /* PreflightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F20011A24042DBC60F8AFC3 /* PreflightView.swift */; };
+		34CB7D3AE1FA047F2F729CC0 /* RunningJobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C1DB07AF73435C596E7A499 /* RunningJobView.swift */; };
+		5E78F00830AE464C1767814F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DA214326D9788B3E94E265 /* Theme.swift */; };
+		FB550C1291311BEA0738CB78 /* MonogramPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C63C44C165FB6C71BDFAE5 /* MonogramPicker.swift */; };
+		8FA3036F38420E508B21FB0A /* NewTagWizard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D06A3EC16CEC1E007B3FD0 /* NewTagWizard.swift */; };
+		EFCD59DF1E98F1BE411982CA /* TextToolSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB64B6EAD8AEB39FB2032BC9 /* TextToolSheet.swift */; };
+		4560621E60740F5A336ECF7B /* TileGridSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090997BE180071DBCFC39500 /* TileGridSheet.swift */; };
+		4341D332065EEA59637DA5FA /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0E713FF18F69F48EF5588C /* BottomBar.swift */; };
+		36D13775ABBE8BA1847567E6 /* LayersPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E47983C6424F7AA888A12E /* LayersPanel.swift */; };
+		395FB104AA0689998C869524 /* ToolRail.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDF46DFA5842BE35D318CB3 /* ToolRail.swift */; };
+		68218FE40F3FA3F0ECF56815 /* WorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984DA0A41304FD04BB026E79 /* WorkspaceView.swift */; };
+		D22104F45ED69BFD3C200435 /* LaserStolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF937F62AB9DA89EB395D039 /* LaserStolTests.swift */; };
+		99810209AD4FE3320BC122AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 58F02208A1E6A99468703A4E /* Assets.xcassets */; };
+		170A4AA6C8910885436D2436 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2912C3D121CE24CF3EB5280 /* IOKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		23B29FE9C887CA15AC9BAB14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6439CF22188FA14BBD363342;
+			remoteInfo = LaserStol;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		341B46BCCCB418FB8441F7FC /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		766136FCC8E2A4C8209D007B /* LaserStolApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaserStolApp.swift; sourceTree = "<group>"; };
+		7BE4E0552C48B4F465F3A1A2 /* DemoProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoProject.swift; sourceTree = "<group>"; };
+		4C97841467904DEDA0C1FC08 /* DesignItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignItem.swift; sourceTree = "<group>"; };
+		8BF5B346754268EAC35A911A /* GeometryTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryTypes.swift; sourceTree = "<group>"; };
+		3709D89124A7E5D2824FA4AE /* LaserLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaserLayer.swift; sourceTree = "<group>"; };
+		0E2DF499371F467284B6338A /* MaterialPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialPreset.swift; sourceTree = "<group>"; };
+		EEE52B9853B2A5D8BF6A214F /* MonogramLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonogramLibrary.swift; sourceTree = "<group>"; };
+		8F41F89775BFF2E5BC7025BF /* ProjectDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDocument.swift; sourceTree = "<group>"; };
+		5C99EA67D8A3E3A9334C61BB /* GCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCodeGenerator.swift; sourceTree = "<group>"; };
+		88A5F537E877A40E527CAE17 /* JobBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobBuilder.swift; sourceTree = "<group>"; };
+		0A65828ABB8C77BFBDCC6AA1 /* PixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelBuffer.swift; sourceTree = "<group>"; };
+		4121F7D0860FBF624A34EFED /* TimeEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeEstimator.swift; sourceTree = "<group>"; };
+		755CDA90941AAAFA475F9D69 /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
+		DDAF83A08DB89F2537611E2D /* GRBLController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GRBLController.swift; sourceTree = "<group>"; };
+		44FD6810C4B2EAD87E3199CA /* GRBLTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GRBLTransport.swift; sourceTree = "<group>"; };
+		A508EFBC43AC9C54F5BC2E6D /* MockGRBLTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGRBLTransport.swift; sourceTree = "<group>"; };
+		A7010BC0971C444F3668A8F1 /* SerialPortTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialPortTransport.swift; sourceTree = "<group>"; };
+		5FDFEBE4C8A118EBE8D8C491 /* ProjectStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectStore.swift; sourceTree = "<group>"; };
+		BD92D7B1973948BF986067F4 /* SVGImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVGImporter.swift; sourceTree = "<group>"; };
+		76860E28F94586C7D1CF0127 /* BedCanvasRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedCanvasRepresentable.swift; sourceTree = "<group>"; };
+		F5D1B4B619673DDF04BD9B3C /* BedCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedCanvasView.swift; sourceTree = "<group>"; };
+		3F20011A24042DBC60F8AFC3 /* PreflightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreflightView.swift; sourceTree = "<group>"; };
+		3C1DB07AF73435C596E7A499 /* RunningJobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningJobView.swift; sourceTree = "<group>"; };
+		E9DA214326D9788B3E94E265 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		C9C63C44C165FB6C71BDFAE5 /* MonogramPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonogramPicker.swift; sourceTree = "<group>"; };
+		F9D06A3EC16CEC1E007B3FD0 /* NewTagWizard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTagWizard.swift; sourceTree = "<group>"; };
+		FB64B6EAD8AEB39FB2032BC9 /* TextToolSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextToolSheet.swift; sourceTree = "<group>"; };
+		090997BE180071DBCFC39500 /* TileGridSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileGridSheet.swift; sourceTree = "<group>"; };
+		2C0E713FF18F69F48EF5588C /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
+		94E47983C6424F7AA888A12E /* LayersPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersPanel.swift; sourceTree = "<group>"; };
+		ECDF46DFA5842BE35D318CB3 /* ToolRail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolRail.swift; sourceTree = "<group>"; };
+		984DA0A41304FD04BB026E79 /* WorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceView.swift; sourceTree = "<group>"; };
+		BF937F62AB9DA89EB395D039 /* LaserStolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaserStolTests.swift; sourceTree = "<group>"; };
+		8BEFD367C4AB92E0F59B0B1F /* LaserStol.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LaserStol.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD6483CE0600A95B1D24B10E /* LaserStolTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LaserStolTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		58F02208A1E6A99468703A4E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5DE24A0370BF41BA5A41E4BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CC7B5C9050F02E50C886EEF4 /* LaserStol.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LaserStol.entitlements; sourceTree = "<group>"; };
+		B2912C3D121CE24CF3EB5280 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		29B2D46AA747A59804D46E1F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				170A4AA6C8910885436D2436 /* IOKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		72EAF812E2D653AC0BDA8C73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		450B220DE8EEB27904FC3DC4 = {
+			isa = PBXGroup;
+			children = (
+				AB8D408CB1881C666AAC0831 /* LaserStol */,
+				5BD2F155E8764D724A94CDEC /* LaserStolTests */,
+				30772F61AC9BDC8631745269 /* Products */,
+				4EA42DE2C7E9C9D22AC4EF9B /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		30772F61AC9BDC8631745269 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8BEFD367C4AB92E0F59B0B1F /* LaserStol.app */,
+				DD6483CE0600A95B1D24B10E /* LaserStolTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4EA42DE2C7E9C9D22AC4EF9B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B2912C3D121CE24CF3EB5280 /* IOKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AB8D408CB1881C666AAC0831 /* LaserStol */ = {
+			isa = PBXGroup;
+			children = (
+				D1D0524B025E57AFFF263442 /* App */,
+				A1C86A29E589D48EC70B6A32 /* Models */,
+				609874F33224C0C09F1FEE42 /* Services */,
+				AF72E81C2367536D31E1EB48 /* Services/GCode */,
+				769C7335B40F11402C6623BE /* Services/Machine */,
+				C71E237AED0167A15E00637D /* UI */,
+				CEFA508E3C5CBBAC0815FF91 /* UI/Canvas */,
+				969C22E473D4D4E7FB62C12D /* UI/Job */,
+				EF89F54AECD21D86F6DB689B /* UI/Wizards */,
+				ACBB380034B989C042A0888F /* UI/Workspace */,
+				58F02208A1E6A99468703A4E /* Assets.xcassets */,
+				5DE24A0370BF41BA5A41E4BE /* Info.plist */,
+				CC7B5C9050F02E50C886EEF4 /* LaserStol.entitlements */,
+			);
+			path = LaserStol;
+			sourceTree = "<group>";
+		};
+		5BD2F155E8764D724A94CDEC /* LaserStolTests */ = {
+			isa = PBXGroup;
+			children = (
+				BF937F62AB9DA89EB395D039 /* LaserStolTests.swift */,
+			);
+			path = LaserStolTests;
+			sourceTree = "<group>";
+		};
+		D1D0524B025E57AFFF263442 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				341B46BCCCB418FB8441F7FC /* AppState.swift */,
+				766136FCC8E2A4C8209D007B /* LaserStolApp.swift */,
+			);
+			path = "App";
+			sourceTree = "<group>";
+		};
+		A1C86A29E589D48EC70B6A32 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7BE4E0552C48B4F465F3A1A2 /* DemoProject.swift */,
+				4C97841467904DEDA0C1FC08 /* DesignItem.swift */,
+				8BF5B346754268EAC35A911A /* GeometryTypes.swift */,
+				3709D89124A7E5D2824FA4AE /* LaserLayer.swift */,
+				0E2DF499371F467284B6338A /* MaterialPreset.swift */,
+				EEE52B9853B2A5D8BF6A214F /* MonogramLibrary.swift */,
+				8F41F89775BFF2E5BC7025BF /* ProjectDocument.swift */,
+			);
+			path = "Models";
+			sourceTree = "<group>";
+		};
+		609874F33224C0C09F1FEE42 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				755CDA90941AAAFA475F9D69 /* ImageProcessor.swift */,
+				5FDFEBE4C8A118EBE8D8C491 /* ProjectStore.swift */,
+				BD92D7B1973948BF986067F4 /* SVGImporter.swift */,
+			);
+			path = "Services";
+			sourceTree = "<group>";
+		};
+		AF72E81C2367536D31E1EB48 /* Services/GCode */ = {
+			isa = PBXGroup;
+			children = (
+				5C99EA67D8A3E3A9334C61BB /* GCodeGenerator.swift */,
+				88A5F537E877A40E527CAE17 /* JobBuilder.swift */,
+				0A65828ABB8C77BFBDCC6AA1 /* PixelBuffer.swift */,
+				4121F7D0860FBF624A34EFED /* TimeEstimator.swift */,
+			);
+			path = "Services/GCode";
+			sourceTree = "<group>";
+		};
+		769C7335B40F11402C6623BE /* Services/Machine */ = {
+			isa = PBXGroup;
+			children = (
+				DDAF83A08DB89F2537611E2D /* GRBLController.swift */,
+				44FD6810C4B2EAD87E3199CA /* GRBLTransport.swift */,
+				A508EFBC43AC9C54F5BC2E6D /* MockGRBLTransport.swift */,
+				A7010BC0971C444F3668A8F1 /* SerialPortTransport.swift */,
+			);
+			path = "Services/Machine";
+			sourceTree = "<group>";
+		};
+		C71E237AED0167A15E00637D /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				E9DA214326D9788B3E94E265 /* Theme.swift */,
+			);
+			path = "UI";
+			sourceTree = "<group>";
+		};
+		CEFA508E3C5CBBAC0815FF91 /* UI/Canvas */ = {
+			isa = PBXGroup;
+			children = (
+				76860E28F94586C7D1CF0127 /* BedCanvasRepresentable.swift */,
+				F5D1B4B619673DDF04BD9B3C /* BedCanvasView.swift */,
+			);
+			path = "UI/Canvas";
+			sourceTree = "<group>";
+		};
+		969C22E473D4D4E7FB62C12D /* UI/Job */ = {
+			isa = PBXGroup;
+			children = (
+				3F20011A24042DBC60F8AFC3 /* PreflightView.swift */,
+				3C1DB07AF73435C596E7A499 /* RunningJobView.swift */,
+			);
+			path = "UI/Job";
+			sourceTree = "<group>";
+		};
+		EF89F54AECD21D86F6DB689B /* UI/Wizards */ = {
+			isa = PBXGroup;
+			children = (
+				C9C63C44C165FB6C71BDFAE5 /* MonogramPicker.swift */,
+				F9D06A3EC16CEC1E007B3FD0 /* NewTagWizard.swift */,
+				FB64B6EAD8AEB39FB2032BC9 /* TextToolSheet.swift */,
+				090997BE180071DBCFC39500 /* TileGridSheet.swift */,
+			);
+			path = "UI/Wizards";
+			sourceTree = "<group>";
+		};
+		ACBB380034B989C042A0888F /* UI/Workspace */ = {
+			isa = PBXGroup;
+			children = (
+				2C0E713FF18F69F48EF5588C /* BottomBar.swift */,
+				94E47983C6424F7AA888A12E /* LayersPanel.swift */,
+				ECDF46DFA5842BE35D318CB3 /* ToolRail.swift */,
+				984DA0A41304FD04BB026E79 /* WorkspaceView.swift */,
+			);
+			path = "UI/Workspace";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6439CF22188FA14BBD363342 /* LaserStol */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1C6080EF2909DC620BAA3BA /* Build configuration list for PBXNativeTarget "LaserStol" */;
+			buildPhases = (
+				0F2A33C9B352E389BDBCF3E8 /* Sources */,
+				29B2D46AA747A59804D46E1F /* Frameworks */,
+				291A891547850556A1912B92 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LaserStol;
+			productName = LaserStol;
+			productReference = 8BEFD367C4AB92E0F59B0B1F /* LaserStol.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BA128F9D3C0D15FFB32AEEA8 /* LaserStolTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA3DB3BE5DAC200295026D9A /* Build configuration list for PBXNativeTarget "LaserStolTests" */;
+			buildPhases = (
+				553E488A9666BA2F94A15605 /* Sources */,
+				72EAF812E2D653AC0BDA8C73 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A40FCD90B46E76FFF302F9F /* PBXTargetDependency */,
+			);
+			name = LaserStolTests;
+			productName = LaserStolTests;
+			productReference = DD6483CE0600A95B1D24B10E /* LaserStolTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46F86FAA6BBF9AC94A7E4595 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					6439CF22188FA14BBD363342 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					BA128F9D3C0D15FFB32AEEA8 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = 6439CF22188FA14BBD363342;
+					};
+				};
+			};
+			buildConfigurationList = B26A8229FF5C1D2353DFEFC6 /* Build configuration list for PBXProject "LaserStol" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = ru;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				ru,
+				Base,
+			);
+			mainGroup = 450B220DE8EEB27904FC3DC4;
+			productRefGroup = 30772F61AC9BDC8631745269 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6439CF22188FA14BBD363342 /* LaserStol */,
+				BA128F9D3C0D15FFB32AEEA8 /* LaserStolTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		291A891547850556A1912B92 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				99810209AD4FE3320BC122AD /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0F2A33C9B352E389BDBCF3E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E3702420182240A18149119D /* AppState.swift in Sources */,
+				53291510C69F5741F7CC8125 /* LaserStolApp.swift in Sources */,
+				B148D0D78F07158442383809 /* DemoProject.swift in Sources */,
+				8575F402467226DD8A8E5DB7 /* DesignItem.swift in Sources */,
+				EF69DBA60EBC4E0DC04CC6F2 /* GeometryTypes.swift in Sources */,
+				D77EC5220866B1C9BE626B0F /* LaserLayer.swift in Sources */,
+				715EBE643E6F2BC18F4BC195 /* MaterialPreset.swift in Sources */,
+				68DBB376FC8082E3FA75F86C /* MonogramLibrary.swift in Sources */,
+				949B2A40C577C0F0A6A13BBF /* ProjectDocument.swift in Sources */,
+				F4C4EFBFA4234392D8560C6B /* GCodeGenerator.swift in Sources */,
+				BBC2878E4DBE4817E63C4FAD /* JobBuilder.swift in Sources */,
+				796F2D301AC0805E774AF4B7 /* PixelBuffer.swift in Sources */,
+				D9B038B165971BFFCB603471 /* TimeEstimator.swift in Sources */,
+				8F1AD996DA4CE7DA987528F0 /* ImageProcessor.swift in Sources */,
+				D1242D97B9E74E745F21E5BB /* GRBLController.swift in Sources */,
+				726807D2FF5CBAFE1930B8A1 /* GRBLTransport.swift in Sources */,
+				82CDD9C55DDAAC9AB6A7850C /* MockGRBLTransport.swift in Sources */,
+				393D917B0202E22C5AF55E90 /* SerialPortTransport.swift in Sources */,
+				B6879B3ACE5A682324B83840 /* ProjectStore.swift in Sources */,
+				DEEB3C0A860E8CA31DE41006 /* SVGImporter.swift in Sources */,
+				18ACFA515F237EA6F94FBD1A /* BedCanvasRepresentable.swift in Sources */,
+				6734BF9882C0FAFE3F196D11 /* BedCanvasView.swift in Sources */,
+				E967678D0458502ADAA124F2 /* PreflightView.swift in Sources */,
+				34CB7D3AE1FA047F2F729CC0 /* RunningJobView.swift in Sources */,
+				5E78F00830AE464C1767814F /* Theme.swift in Sources */,
+				FB550C1291311BEA0738CB78 /* MonogramPicker.swift in Sources */,
+				8FA3036F38420E508B21FB0A /* NewTagWizard.swift in Sources */,
+				EFCD59DF1E98F1BE411982CA /* TextToolSheet.swift in Sources */,
+				4560621E60740F5A336ECF7B /* TileGridSheet.swift in Sources */,
+				4341D332065EEA59637DA5FA /* BottomBar.swift in Sources */,
+				36D13775ABBE8BA1847567E6 /* LayersPanel.swift in Sources */,
+				395FB104AA0689998C869524 /* ToolRail.swift in Sources */,
+				68218FE40F3FA3F0ECF56815 /* WorkspaceView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		553E488A9666BA2F94A15605 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D22104F45ED69BFD3C200435 /* LaserStolTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7A40FCD90B46E76FFF302F9F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6439CF22188FA14BBD363342 /* LaserStol */;
+			targetProxy = 23B29FE9C887CA15AC9BAB14 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		E5016F75BFBBE993D67A1FA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+
+			};
+			name = Debug;
+		};
+		AE4476B348944B72155F1975 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+
+			};
+			name = Release;
+		};
+		97902B19EA1F3B4671A36439 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LaserStol/LaserStol.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = LaserStol/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.proaibitrix.LaserStol;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+
+			};
+			name = Debug;
+		};
+		E0727BB21F08FD92F6EEFA91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LaserStol/LaserStol.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = LaserStol/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.proaibitrix.LaserStol;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+
+			};
+			name = Release;
+		};
+		3700F906404A24CF55E13BA4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.proaibitrix.LaserStolTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LaserStol.app/Contents/MacOS/LaserStol";
+
+			};
+			name = Debug;
+		};
+		DDB15F3ED6BF4A3582A331CE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.proaibitrix.LaserStolTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LaserStol.app/Contents/MacOS/LaserStol";
+
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B26A8229FF5C1D2353DFEFC6 /* Build configuration list for PBXProject "LaserStol" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5016F75BFBBE993D67A1FA7 /* Debug */,
+				AE4476B348944B72155F1975 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1C6080EF2909DC620BAA3BA /* Build configuration list for PBXNativeTarget "LaserStol" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				97902B19EA1F3B4671A36439 /* Debug */,
+				E0727BB21F08FD92F6EEFA91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA3DB3BE5DAC200295026D9A /* Build configuration list for PBXNativeTarget "LaserStolTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3700F906404A24CF55E13BA4 /* Debug */,
+				DDB15F3ED6BF4A3582A331CE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+}
