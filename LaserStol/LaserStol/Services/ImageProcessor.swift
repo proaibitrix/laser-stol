@@ -25,8 +25,8 @@ enum ImageProcessor {
     static func pixelBuffer(
         pngData: Data,
         maxEdge: Int = 400,
-        threshold: Double,
-        invert: Bool
+        threshold: Double = 0.52,
+        invert: Bool = false
     ) -> PixelBuffer? {
         guard let image = NSImage(data: pngData) else { return nil }
         return pixelBuffer(image: image, maxEdge: maxEdge)

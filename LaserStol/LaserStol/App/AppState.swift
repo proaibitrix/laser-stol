@@ -354,7 +354,12 @@ final class AppState: ObservableObject {
     func pixels(for item: DesignItem) -> PixelBuffer? {
         switch item.content {
         case .image(let image):
-            return ImageProcessor.pixelBuffer(pngData: image.pngData, maxEdge: 220)
+            return ImageProcessor.pixelBuffer(
+                pngData: image.pngData,
+                maxEdge: 220,
+                threshold: image.threshold,
+                invert: image.invert
+            )
         case .text(let text):
             let ns = ImageProcessor.renderText(text, size: NSSize(width: 240, height: 240))
             return ImageProcessor.pixelBuffer(image: ns, maxEdge: 72)
