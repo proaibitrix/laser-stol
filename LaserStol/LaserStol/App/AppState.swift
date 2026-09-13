@@ -53,7 +53,7 @@ final class AppState: ObservableObject {
     @Published var contourDraft: [MMPoint] = []
     @Published var showConnectionPopover = false
 
-    let machine = GRBLController()
+    @Published var machine = GRBLController()
     private var autosave: AnyCancellable?
     private var machineBag = Set<AnyCancellable>()
 
