@@ -132,7 +132,7 @@ struct NewTagWizard: View {
                 .font(.system(size: 12))
                 .frame(width: 72, alignment: .leading)
             HStack(spacing: 0) {
-                Button("−") { value.wrappedValue = max(8, value.wrappedValue - 1) }
+                Button("−") { value.wrappedValue = max(8.0, value.wrappedValue - 1) }
                     .frame(width: 28, height: 28)
                 Text(String(format: "%.0f", value.wrappedValue))
                     .font(.system(size: 13, weight: .medium))
@@ -141,7 +141,7 @@ struct NewTagWizard: View {
                     .font(.system(size: 11))
                     .foregroundColor(Theme.mute)
                     .padding(.trailing, 8)
-                Button("+") { value.wrappedValue = min(400, value.wrappedValue + 1) }
+                Button("+") { value.wrappedValue = min(400.0, value.wrappedValue + 1) }
                     .frame(width: 28, height: 28)
             }
             .background(Capsule().fill(Theme.card))

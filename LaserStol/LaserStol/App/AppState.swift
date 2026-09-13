@@ -160,8 +160,8 @@ final class AppState: ObservableObject {
               let minY = allPoints.map(\.y).min(),
               let maxX = allPoints.map(\.x).max(),
               let maxY = allPoints.map(\.y).max() else { return }
-        let srcW = max(1, maxX - minX)
-        let srcH = max(1, maxY - minY)
+        let srcW = max(1.0, maxX - minX)
+        let srcH = max(1.0, maxY - minY)
         let target = min(90.0, document.bedWidthMM * 0.3)
         let scale = target / max(srcW, srcH)
         let cx = document.bedWidthMM / 2
@@ -280,7 +280,7 @@ final class AppState: ObservableObject {
         let item = DesignItem(
             layerID: layerID(for: .cut),
             name: "Контур",
-            transform: ItemTransform(centerX: cx, centerY: cy, width: max(1, maxX - minX), height: max(1, maxY - minY)),
+            transform: ItemTransform(centerX: cx, centerY: cy, width: max(1.0, maxX - minX), height: max(1.0, maxY - minY)),
             content: .freehand(FreehandPayload(points: local, closed: true))
         )
         document.upsert(item)

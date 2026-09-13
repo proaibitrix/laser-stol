@@ -8,7 +8,7 @@ struct MMPoint: Codable, Equatable {
 
     static let zero = MMPoint(x: 0, y: 0)
 
-    var cgPoint: CGPoint { CGPoint(x: x, y: y) }
+    var cgPoint: CGPoint { CGPoint(x: CGFloat(x), y: CGFloat(y)) }
 
     func offset(dx: Double, dy: Double) -> MMPoint {
         MMPoint(x: x + dx, y: y + dy)

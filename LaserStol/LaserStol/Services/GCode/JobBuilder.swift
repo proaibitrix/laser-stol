@@ -68,8 +68,8 @@ enum JobBuilder {
         let dist = TimeEstimator.distances(in: assembled)
         let seconds = TimeEstimator.estimateSeconds(
             distances: dist,
-            burnFeed: max(200, material.burnSpeedMMPerMin * settings.speed.speedMultiplier),
-            cutFeed: max(80, material.cutSpeedMMPerMin * settings.speed.speedMultiplier)
+            burnFeed: max(200.0, material.burnSpeedMMPerMin * settings.speed.speedMultiplier),
+            cutFeed: max(80.0, material.cutSpeedMMPerMin * settings.speed.speedMultiplier)
         )
         return GeneratedJob(
             gcode: assembled,

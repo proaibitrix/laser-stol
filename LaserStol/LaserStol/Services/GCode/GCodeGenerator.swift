@@ -49,9 +49,9 @@ enum GCodeGenerator {
         ]
     }
 
-    static func spindle(_ percent: Double, max: Int) -> Int {
-        let clamped = min(1, max(0, percent / 100))
-        return Int((clamped * Double(max)).rounded())
+    static func spindle(_ percent: Double, max maxSpindle: Int) -> Int {
+        let clamped = min(1.0, Swift.max(0.0, percent / 100.0))
+        return Int((clamped * Double(maxSpindle)).rounded())
     }
 
     static func contour(
@@ -169,8 +169,8 @@ enum GCodeGenerator {
 
             func flushRun(endX: Int) {
                 guard let startX = runStart else { return }
-                let x0 = (min(startX, endX) + 0.5) * mmPerPixel + origin.x
-                let x1 = (max(startX, endX) + 0.5) * mmPerPixel + origin.x
+                let x0 = (Double(min(startX, endX)) + 0.5) * mmPerPixel + origin.x
+                let x1 = (Double(max(startX, endX)) + 0.5) * mmPerPixel + origin.x
                 let from = rtl ? x1 : x0
                 let to = rtl ? x0 : x1
                 if !laserOn {
@@ -204,7 +204,7 @@ enum GCodeGenerator {
     }
 
     static func roundedRectPoints(_ rect: MMRect, radius: Double, segmentsPerCorner: Int = 6) -> [MMPoint] {
-        let r = min(max(0, radius), min(rect.width, rect.height) / 2)
+        let r = min(Swift.max(0.0, radius), min(rect.width, rect.height) / 2.0)
         if r < 0.05 {
             return [
                 MMPoint(x: rect.minX, y: rect.minY),
@@ -240,7 +240,7 @@ enum GCodeGenerator {
     }
 
     static func tagHoleCenter(rect: MMRect) -> MMPoint {
-        MMPoint(x: rect.midX, y: rect.maxY - min(6, rect.height * 0.18))
+        MMPoint(x: rect.midX, y: rect.maxY - min(6.0, rect.height * 0.18))
     }
 
     static func tagHoleRadius(rect: MMRect) -> Double {
@@ -248,8 +248,8 @@ enum GCodeGenerator {
     }
 
     static func applyStrength(power: Double, speed: Double, settings: JobSettings) -> (Double, Double) {
-        let p = min(100, power * settings.power.powerMultiplier)
-        let s = max(60, speed * settings.speed.speedMultiplier)
+        let p = min(100.0, power * settings.power.powerMultiplier)
+        let s = max(60.0, speed * settings.speed.speedMultiplier)
         return (p, s)
     }
 

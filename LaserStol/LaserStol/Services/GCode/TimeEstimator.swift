@@ -76,9 +76,9 @@ enum TimeEstimator {
         travelFeed: Double = 3000,
         overheadFactor: Double = 1.18
     ) -> Double {
-        let burnT = distances.burnMM / max(60, burnFeed) * 60
-        let cutT = distances.cutMM / max(60, cutFeed) * 60
-        let travelT = distances.travelMM / max(120, travelFeed) * 60
+        let burnT = distances.burnMM / max(60.0, burnFeed) * 60.0
+        let cutT = distances.cutMM / max(60.0, cutFeed) * 60.0
+        let travelT = distances.travelMM / max(120.0, travelFeed) * 60.0
         return (burnT + cutT + travelT + distances.dwellSeconds) * overheadFactor
     }
 
@@ -114,7 +114,7 @@ enum TimeEstimator {
     /// Читает первое слово вроде X12.3 из строки.
     static func parseWord(_ line: String, _ letter: Character) -> Double? {
         let chars = Array(line.uppercased())
-        let target = Character(letter.uppercased())
+        let target = Character(letter.uppercased().first ?? letter)
         var i = 0
         while i < chars.count {
             if chars[i] == target {

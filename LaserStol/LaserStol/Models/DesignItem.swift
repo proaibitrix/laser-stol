@@ -175,7 +175,7 @@ struct DesignItem: Identifiable, Codable, Equatable {
     }
 
     mutating func setThreshold(_ value: Double) {
-        threshold = min(1, max(0, value))
+        threshold = min(1.0, max(0.0, value))
         if case .image(var image) = content {
             image.threshold = threshold
             content = .image(image)

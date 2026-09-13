@@ -73,7 +73,7 @@ struct PixelBuffer: Equatable {
 enum ThresholdProcessor {
     static func luminance(r: UInt8, g: UInt8, b: UInt8) -> UInt8 {
         let y = 0.299 * Double(r) + 0.587 * Double(g) + 0.114 * Double(b)
-        return UInt8(min(255, max(0, y.rounded())))
+        return UInt8(min(255, max(0, Int(y.rounded()))))
     }
 
     /// RGBA8 (не премультипл.) → буфер. Альфа ниже `alphaCutoff` считается прозрачной.

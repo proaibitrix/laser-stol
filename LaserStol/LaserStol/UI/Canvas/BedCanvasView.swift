@@ -59,7 +59,7 @@ final class BedCanvasView: NSView {
         guard let app = app else { return bounds.insetBy(dx: 24, dy: 24) }
         let inset: CGFloat = 8
         let available = bounds.insetBy(dx: inset, dy: inset)
-        let aspect = CGFloat(app.document.bedWidthMM / max(app.document.bedHeightMM, 1))
+        let aspect = CGFloat(app.document.bedWidthMM / max(app.document.bedHeightMM, 1.0))
         var w = available.width
         var h = w / aspect
         if h > available.height {
@@ -85,14 +85,14 @@ final class BedCanvasView: NSView {
     private func mmPoint(from view: NSPoint) -> MMPoint {
         guard let app = app else { return .zero }
         let bed = bedRect()
-        let x = Double((view.x - bed.minX) / max(bed.width, 1)) * app.document.bedWidthMM
-        let y = Double((view.y - bed.minY) / max(bed.height, 1)) * app.document.bedHeightMM
+        let x = Double((view.x - bed.minX) / max(bed.width, 1 as CGFloat)) * app.document.bedWidthMM
+        let y = Double((view.y - bed.minY) / max(bed.height, 1 as CGFloat)) * app.document.bedHeightMM
         return MMPoint(x: x, y: y)
     }
 
     private func scaleMMPerPoint() -> Double {
         guard let app = app else { return 1 }
-        return app.document.bedWidthMM / Double(max(bedRect().width, 1))
+        return app.document.bedWidthMM / Double(max(bedRect().width, 1 as CGFloat))
     }
 
     // MARK: - Drawing
@@ -373,8 +373,8 @@ final class BedCanvasView: NSView {
             let sy: Double = (handle == 0 || handle == 1) ? -1 : 1
             let dw = (mm.x - dragStart.x) * sx
             let dh = (mm.y - dragStart.y) * sy
-            item.transform.width = max(4, orig.width + dw)
-            item.transform.height = max(4, orig.height + dh)
+            item.transform.width = max(4.0, orig.width + dw)
+            item.transform.height = max(4.0, orig.height + dh)
             app.updateItem(item)
         case .rotate:
             guard let id = app.selectedIDs.first, var item = app.document.item(id: id) else { return }
