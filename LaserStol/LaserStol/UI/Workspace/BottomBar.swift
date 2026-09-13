@@ -7,11 +7,13 @@ struct BottomBar: View {
         HStack(spacing: 10) {
             HStack(spacing: 6) {
                 Circle()
-                    .fill(app.machine.connection.isReady ? Theme.good : Theme.mute)
+                    .fill(app.machine.connection.isReady
+                          ? (app.machine.isDemo ? Theme.terracotta : Theme.good)
+                          : Theme.mute)
                     .frame(width: 7, height: 7)
-                Text(app.machine.connection.isReady ? "Подключено" : app.machine.connection.title)
-                    .font(.system(size: 11))
-                    .foregroundColor(Theme.mute)
+                Text(app.machine.connectionLabel)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(Theme.ink)
             }
             .padding(.leading, 18)
 

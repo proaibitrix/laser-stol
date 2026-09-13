@@ -28,6 +28,7 @@ enum JobPhase: Equatable {
     case running
     case paused
     case finished
+    case demoFinished
     case failed(String)
     case cancelled
 }
@@ -52,6 +53,28 @@ final class GRBLController: ObservableObject {
     }
 
     var isConnected: Bool { transport.isConnected && connection.isReady }
+
+    var isDemo: Bool { transport.kind == .mock }
+
+    /// Подпись в UI: макет никогда не называется просто «Подключено».
+    var connectionLabel: String {
+        switch connection {
+        case .connected:
+            if transport.kind == .mock {
+                return "Демо (Mock)"
+            }
+            let name = availablePorts.first(where: { $0.path == selectedPortPath })?.name
+            if let name = name, !name.isEmpty {
+                return "Станок · \(name)"
+            }
+            if !selectedPortPath.isEmpty {
+                return "Станок · \((selectedPortPath as NSString).lastPathComponent)"
+            }
+            return "Станок подключён"
+        default:
+            return connection.title
+        }
+    }
 
     func refreshPorts() {
         availablePorts = SerialPortEnumerator.availablePorts()
@@ -107,20 +130,42 @@ final class GRBLController: ObservableObject {
             return
         }
         let lines = job.gcode.components(separatedBy: CharacterSet.newlines)
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+        let motionCount = lines.filter { line in
+            let u = line.uppercased()
+            return u.hasPrefix("G0") || u.hasPrefix("G1") || u.hasPrefix("G00") || u.hasPrefix("G01")
+        }.count
+        guard motionCount > 0 else {
+            lastError = GRBLTransportError.emptyStream.localizedDescription
+            phase = .failed(lastError ?? "")
+            statusCaption = lastError ?? ""
+            return
+        }
+        let demo = transport.kind == .mock
         phase = .running
         progress = 0
-        statusCaption = "Запускаю задание…"
+        statusCaption = demo ? "Демо без станка: прогон G-code…" : "Запускаю задание…"
         transport.startStreaming(lines: lines, onProgress: { [weak self] value, caption in
             self?.progress = value
-            self?.statusCaption = caption
+            if demo {
+                self?.statusCaption = "Демо: \(caption)"
+            } else {
+                self?.statusCaption = caption
+            }
             self?.phase = .running
         }, completion: { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success:
                 self.progress = 1
-                self.phase = .finished
-                self.statusCaption = "Готово"
+                if demo {
+                    self.phase = .demoFinished
+                    self.statusCaption = "Демо без станка — лазер не двигался"
+                } else {
+                    self.phase = .finished
+                    self.statusCaption = "Готово"
+                }
             case .failure(let error):
                 if case GRBLTransportError.cancelled = error {
                     self.phase = .cancelled

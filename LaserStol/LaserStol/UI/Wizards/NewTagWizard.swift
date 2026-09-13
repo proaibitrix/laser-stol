@@ -4,20 +4,24 @@ struct NewTagWizard: View {
     @EnvironmentObject private var app: AppState
 
     var body: some View {
-        VStack(spacing: 22) {
-            header
-            shapeRow
-            HStack(alignment: .top, spacing: 28) {
-                previewCard
-                sizeFields
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 20) {
+                    header
+                    shapeRow
+                    HStack(alignment: .top, spacing: 24) {
+                        previewCard
+                        sizeFields
+                    }
+                }
+                .padding(.horizontal, 28)
+                .padding(.top, 22)
+                .padding(.bottom, 16)
             }
-            Spacer(minLength: 8)
             nextBar
         }
-        .padding(.horizontal, 36)
-        .padding(.top, 28)
-        .padding(.bottom, 0)
-        .frame(width: 760, height: 520)
+        .frame(minWidth: 620, idealWidth: 720, maxWidth: 820, minHeight: 460, idealHeight: 560)
+        .creamSurface()
         .background(Theme.cream)
     }
 
@@ -25,22 +29,23 @@ struct NewTagWizard: View {
         VStack(spacing: 6) {
             Text("1")
                 .font(.system(size: 11, weight: .medium))
-                .foregroundColor(Theme.mute)
+                .foregroundColor(Theme.ink)
                 .frame(width: 22, height: 22)
                 .overlay(Circle().stroke(Theme.line, lineWidth: 1))
             Text("Новая бирка")
-                .font(.system(size: 26, weight: .semibold))
+                .font(.system(size: 24, weight: .semibold))
                 .foregroundColor(Theme.ink)
             Text("Выберите форму и размер бирки")
                 .font(.system(size: 12))
                 .foregroundColor(Theme.mute)
         }
+        .frame(maxWidth: .infinity)
     }
 
     private var shapeRow: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("1. Выберите форму")
-                .font(.system(size: 12, weight: .medium))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(Theme.ink)
             HStack(spacing: 12) {
                 shapeCard(.rectangle, title: "Прямоугольник", subtitle: "Классическая форма", icon: "rectangle")
@@ -55,7 +60,7 @@ struct NewTagWizard: View {
         return Button {
             app.draftTag.shape = shape
         } label: {
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
                 HStack {
                     Spacer()
                     if selected {
@@ -66,9 +71,9 @@ struct NewTagWizard: View {
                 }
                 .frame(height: 14)
                 Image(systemName: icon)
-                    .font(.system(size: 22, weight: .regular))
+                    .font(.system(size: 20, weight: .regular))
                     .foregroundColor(Theme.terracotta)
-                    .frame(height: 28)
+                    .frame(height: 26)
                 Text(title)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(Theme.ink)
@@ -77,8 +82,8 @@ struct NewTagWizard: View {
                     .foregroundColor(Theme.mute)
                     .multilineTextAlignment(.center)
             }
-            .padding(12)
-            .frame(maxWidth: .infinity, minHeight: 118)
+            .padding(10)
+            .frame(maxWidth: .infinity, minHeight: 108)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(selected ? Theme.terracottaSoft : Theme.card)
@@ -94,7 +99,8 @@ struct NewTagWizard: View {
     private var previewCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("2. Предпросмотр бирки")
-                .font(.system(size: 12, weight: .medium))
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(Theme.ink)
             ZStack {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(Theme.card)
@@ -102,21 +108,22 @@ struct NewTagWizard: View {
                 TagPreview(draft: app.draftTag)
                     .frame(width: 160, height: 110)
             }
-            .frame(width: 280, height: 160)
+            .frame(width: 260, height: 150)
         }
     }
 
     private var sizeFields: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("3. Размеры (мм)")
-                .font(.system(size: 12, weight: .medium))
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(Theme.ink)
             stepper("Ширина", value: $app.draftTag.widthMM)
             stepper("Высота", value: $app.draftTag.heightMM)
             HStack(alignment: .top, spacing: 6) {
                 Image(systemName: "lightbulb")
                     .font(.system(size: 11))
                     .foregroundColor(Theme.terracotta)
-                Text("Размеры можно изменить на следующем шаге")
+                Text("Размеры можно изменить на столе после вставки.")
                     .font(.system(size: 10))
                     .foregroundColor(Theme.mute)
                     .fixedSize(horizontal: false, vertical: true)
@@ -129,19 +136,23 @@ struct NewTagWizard: View {
     private func stepper(_ title: String, value: Binding<Double>) -> some View {
         HStack {
             Text(title)
-                .font(.system(size: 12))
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(Theme.ink)
                 .frame(width: 72, alignment: .leading)
             HStack(spacing: 0) {
                 Button("−") { value.wrappedValue = max(8.0, value.wrappedValue - 1) }
+                    .foregroundColor(Theme.ink)
                     .frame(width: 28, height: 28)
                 Text(String(format: "%.0f", value.wrappedValue))
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Theme.ink)
                     .frame(width: 54)
                 Text("мм")
-                    .font(.system(size: 11))
+                    .font(.system(size: 11, weight: .medium))
                     .foregroundColor(Theme.mute)
                     .padding(.trailing, 8)
                 Button("+") { value.wrappedValue = min(400.0, value.wrappedValue + 1) }
+                    .foregroundColor(Theme.ink)
                     .frame(width: 28, height: 28)
             }
             .background(Capsule().fill(Theme.card))
@@ -157,17 +168,16 @@ struct NewTagWizard: View {
             HStack {
                 Spacer()
                 Text("Дальше")
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.system(size: 14, weight: .semibold))
                 Image(systemName: "arrow.right")
                     .font(.system(size: 12, weight: .medium))
                 Spacer()
             }
-            .foregroundColor(.white)
+            .foregroundColor(Color(red: 1, green: 1, blue: 1))
             .frame(height: 44)
             .background(Theme.terracotta)
         }
         .buttonStyle(.plain)
-        .padding(.horizontal, -36)
     }
 }
 
@@ -177,7 +187,7 @@ struct TagPreview: View {
     var body: some View {
         ZStack {
             tagShape
-                .fill(Color.white)
+                .fill(Color(red: 1, green: 1, blue: 1))
                 .shadow(color: Color.black.opacity(0.06), radius: 6, y: 2)
             tagShape
                 .stroke(Theme.terracotta.opacity(0.35), lineWidth: 1)

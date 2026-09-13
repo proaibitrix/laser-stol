@@ -5,45 +5,26 @@ struct PreflightView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text("Лазерная гравировка и резка")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundColor(Theme.mute)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Лазерная гравировка и резка")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(Theme.mute)
+                        .frame(maxWidth: .infinity)
+
+                    HStack(alignment: .top, spacing: 28) {
+                        previewColumn
+                        checksColumn
+                    }
+                }
+                .padding(.horizontal, 28)
                 .padding(.top, 16)
-                .padding(.bottom, 10)
-
-            HStack(alignment: .top, spacing: 36) {
-                previewColumn
-                checksColumn
+                .padding(.bottom, 12)
             }
-            .padding(.horizontal, 32)
-            .padding(.bottom, 18)
-
-            HStack {
-                Spacer()
-                Button {
-                    app.sheet = nil
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "xmark")
-                        Text("Отмена")
-                    }
-                }
-                .buttonStyle(CompactButtonStyle())
-
-                Button {
-                    app.confirmStart()
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "play.fill")
-                        Text("Начать")
-                    }
-                }
-                .buttonStyle(CompactButtonStyle(prominent: true))
-            }
-            .padding(.horizontal, 28)
-            .padding(.bottom, 22)
+            footer
         }
-        .frame(width: 860, height: 540)
+        .frame(minWidth: 720, idealWidth: 840, maxWidth: 920, minHeight: 480, idealHeight: 580)
+        .creamSurface()
         .background(Theme.cream)
     }
 
@@ -51,12 +32,14 @@ struct PreflightView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Превью траектории")
                 .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(Theme.ink)
             Text("Как лазер обработает ваш объект")
                 .font(.system(size: 12))
                 .foregroundColor(Theme.mute)
 
             TrajectoryPreview(document: app.document)
-                .frame(width: 360, height: 280)
+                .frame(minWidth: 280, minHeight: 220)
+                .frame(height: 240)
                 .background(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .fill(Theme.woodLight)
@@ -73,23 +56,31 @@ struct PreflightView: View {
             }
             .padding(.top, 4)
         }
+        .frame(minWidth: 300)
     }
 
     private var checksColumn: some View {
-        VStack(alignment: .leading, spacing: 18) {
+        VStack(alignment: .leading, spacing: 14) {
             Text("Проверка перед запуском")
                 .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(Theme.ink)
             Text("Проверьте все параметры для безопасной работы")
                 .font(.system(size: 12))
                 .foregroundColor(Theme.mute)
 
+            if app.machine.isDemo {
+                demoBanner
+            }
+
             checkRow(
                 icon: "scope",
                 title: "Лазер на месте",
-                subtitle: app.machine.connection.isReady
-                    ? "Лазерная головка готова к работе"
-                    : "Сначала подключите станок или макет",
-                on: app.machine.connection.isReady
+                subtitle: app.machine.isDemo
+                    ? "Макет: головка не проверяется"
+                    : (app.machine.connection.isReady
+                        ? "Канал станка открыт"
+                        : "Сначала выберите порт и подключите"),
+                on: app.machine.connection.isReady && !app.machine.isDemo
             )
             checkRow(
                 icon: "checkmark.shield",
@@ -125,14 +116,57 @@ struct PreflightView: View {
 
             if let job = app.lastJob {
                 Text("Оценка времени: \(TimeEstimator.formatDuration(job.estimatedSeconds))")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(Theme.ink)
                 Text("Строк G-code: \(job.lineCount)")
-                    .font(.system(size: 10))
+                    .font(.system(size: 11, weight: .medium))
                     .foregroundColor(Theme.mute)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var demoBanner: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Демо без станка")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(Theme.ink)
+            Text("Подключён Mock GRBL. «Начать» прогонит G-code только в приложении — лазер не поедет. Для реального реза: связь → последовательный порт.")
+                .font(.system(size: 11))
+                .foregroundColor(Theme.mute)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 10).fill(Theme.terracottaSoft))
+    }
+
+    private var footer: some View {
+        HStack {
+            Spacer()
+            Button {
+                app.sheet = nil
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "xmark")
+                    Text("Отмена")
+                }
+            }
+            .buttonStyle(CompactButtonStyle())
+
+            Button {
+                app.confirmStart()
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "play.fill")
+                    Text(app.machine.isDemo ? "Начать демо" : "Начать")
+                }
+            }
+            .buttonStyle(CompactButtonStyle(prominent: true))
+        }
+        .padding(.horizontal, 24)
+        .padding(.vertical, 14)
+        .background(Theme.cream)
     }
 
     private func checkRow(icon: String, title: String, subtitle: String, on: Bool) -> some View {
@@ -142,8 +176,12 @@ struct PreflightView: View {
                 .foregroundColor(Theme.terracotta)
                 .frame(width: 22)
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.system(size: 13, weight: .semibold))
-                Text(subtitle).font(.system(size: 10)).foregroundColor(Theme.mute)
+                Text(title)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Theme.ink)
+                Text(subtitle)
+                    .font(.system(size: 10))
+                    .foregroundColor(Theme.mute)
             }
             Spacer()
             Circle()
@@ -151,7 +189,7 @@ struct PreflightView: View {
                 .frame(width: 22, height: 14)
                 .overlay(
                     Circle()
-                        .fill(Color.white)
+                        .fill(Color(red: 1, green: 1, blue: 1))
                         .frame(width: 10, height: 10)
                         .offset(x: on ? 4 : -4)
                 )
@@ -171,8 +209,8 @@ struct PreflightView: View {
                 Circle().fill(color).frame(width: 8, height: 8)
             }
             Text(title)
-                .font(.system(size: 10))
-                .foregroundColor(Theme.mute)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(Theme.ink)
         }
     }
 }

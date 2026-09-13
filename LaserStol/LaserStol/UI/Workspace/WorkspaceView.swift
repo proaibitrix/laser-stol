@@ -60,11 +60,13 @@ struct ConnectionChip: View {
         } label: {
             HStack(spacing: 6) {
                 Circle()
-                    .fill(app.machine.connection.isReady ? Theme.good : Theme.mute)
+                    .fill(app.machine.connection.isReady
+                          ? (app.machine.isDemo ? Theme.terracotta : Theme.good)
+                          : Theme.mute)
                     .frame(width: 7, height: 7)
-                Text(app.machine.connection.title)
+                Text(app.machine.connectionLabel)
                     .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(Theme.ink.opacity(0.75))
+                    .foregroundColor(Theme.ink)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
@@ -86,6 +88,12 @@ struct ConnectionPopover: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Связь со станком")
                 .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(Theme.ink)
+            Text(app.machine.isDemo
+                 ? "Сейчас макет GRBL: лазер не двигается."
+                 : "Канал: последовательный порт.")
+                .font(.system(size: 11))
+                .foregroundColor(Theme.mute)
             Picker("Канал", selection: $app.machine.transportKind) {
                 ForEach(TransportKind.allCases) { kind in
                     Text(kind.title).tag(kind)
@@ -125,6 +133,8 @@ struct ConnectionPopover: View {
             }
         }
         .padding(16)
-        .frame(width: 280)
+        .frame(width: 300)
+        .creamSurface()
+        .background(Theme.cream)
     }
 }

@@ -144,6 +144,7 @@ struct ItemInspector: View {
     private func mini(_ title: String, action: @escaping () -> Void) -> some View {
         Button(title, action: action)
             .font(.system(size: 10, weight: .medium))
+            .foregroundColor(Theme.ink)
             .padding(.horizontal, 7)
             .padding(.vertical, 4)
             .background(Capsule().fill(Theme.creamDeep))

@@ -45,17 +45,22 @@ struct RootView: View {
 
     var body: some View {
         WorkspaceView()
+            .creamSurface()
             .background(Theme.cream.ignoresSafeArea())
             .background(WindowAccessor { window in
                 window.title = "Лазерный стол"
                 window.titleVisibility = .hidden
                 window.titlebarAppearsTransparent = true
                 window.isMovableByWindowBackground = true
-                window.backgroundColor = Theme.nsCream
                 window.toolbarStyle = .unifiedCompact
             })
             .sheet(item: $app.sheet) { sheet in
                 sheetHost(sheet)
+                    .creamSurface()
+                    .background(Theme.cream)
+                    .background(WindowAccessor { window in
+                        window.title = "Лазерный стол"
+                    })
             }
     }
 

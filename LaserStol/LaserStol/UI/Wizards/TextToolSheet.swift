@@ -7,8 +7,10 @@ struct TextToolSheet: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Текст")
                 .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(Theme.ink)
             TextField("Надпись", text: $app.draftText)
                 .textFieldStyle(.roundedBorder)
+                .foregroundColor(Theme.ink)
                 .frame(width: 320)
             Text("Будет выжжена как чёрно-белый рисунок на слое «Прожиг».")
                 .font(.system(size: 11))
@@ -22,7 +24,8 @@ struct TextToolSheet: View {
             }
         }
         .padding(24)
-        .frame(width: 400)
+        .frame(minWidth: 380, minHeight: 200)
+        .creamSurface()
         .background(Theme.cream)
     }
 }

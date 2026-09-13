@@ -7,6 +7,7 @@ struct TileGridSheet: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Размножить сеткой")
                 .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(Theme.ink)
             Text("Копии выбранных объектов раскладываются по листу 400×400 мм с зазором.")
                 .font(.system(size: 12))
                 .foregroundColor(Theme.mute)
@@ -15,6 +16,7 @@ struct TileGridSheet: View {
             stepper("Строки", intValue: $app.tileRows, range: 1...12)
             HStack {
                 Text("Зазор")
+                    .foregroundColor(Theme.ink)
                     .frame(width: 80, alignment: .leading)
                 Slider(value: $app.tileGapMM, in: 0...20)
                     .accentColor(Theme.terracotta)
@@ -46,15 +48,19 @@ struct TileGridSheet: View {
             }
         }
         .padding(24)
-        .frame(width: 460)
+        .frame(minWidth: 420, minHeight: 280)
+        .creamSurface()
         .background(Theme.cream)
     }
 
     private func stepper(_ title: String, intValue: Binding<Int>, range: ClosedRange<Int>) -> some View {
         HStack {
-            Text(title).frame(width: 80, alignment: .leading)
+            Text(title)
+                .foregroundColor(Theme.ink)
+                .frame(width: 80, alignment: .leading)
             Stepper(value: intValue, in: range) {
                 Text("\(intValue.wrappedValue)")
+                    .foregroundColor(Theme.ink)
                     .frame(width: 28)
             }
         }

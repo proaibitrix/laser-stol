@@ -25,6 +25,8 @@ enum GRBLTransportError: Error, LocalizedError {
     case openFailed(String)
     case timeout
     case cancelled
+    case writeFailed(String)
+    case emptyStream
 
     var errorDescription: String? {
         switch self {
@@ -32,6 +34,8 @@ enum GRBLTransportError: Error, LocalizedError {
         case .openFailed(let reason): return "Не удалось открыть порт: \(reason)"
         case .timeout: return "Нет ответа от GRBL"
         case .cancelled: return "Операция отменена"
+        case .writeFailed(let reason): return "Не удалось отправить G-code: \(reason)"
+        case .emptyStream: return "Пустой поток: на порт не ушло ни одного байта"
         }
     }
 }

@@ -7,8 +7,9 @@ enum Theme {
     static let card = Color(red: 1.0, green: 0.992, blue: 0.984)
     static let terracotta = Color(red: 0.773, green: 0.455, blue: 0.365)
     static let terracottaSoft = Color(red: 0.973, green: 0.918, blue: 0.886)
-    static let ink = Color(red: 0.173, green: 0.145, blue: 0.125)
-    static let mute = Color(red: 0.545, green: 0.502, blue: 0.467)
+    /// Угольно-коричневый: не Color.primary (в тёмной теме системы он белый).
+    static let ink = Color(red: 0.12, green: 0.09, blue: 0.07)
+    static let mute = Color(red: 0.36, green: 0.30, blue: 0.26)
     static let line = Color(red: 0.894, green: 0.859, blue: 0.824)
     static let woodLight = Color(red: 0.914, green: 0.792, blue: 0.612)
     static let woodMid = Color(red: 0.843, green: 0.690, blue: 0.502)
@@ -25,7 +26,7 @@ enum Theme {
     static let buttonFont = Font.system(size: 12, weight: .medium)
 
     static var nsCream: NSColor { NSColor(calibratedRed: 0.984, green: 0.965, blue: 0.941, alpha: 1) }
-    static var nsInk: NSColor { NSColor(calibratedRed: 0.173, green: 0.145, blue: 0.125, alpha: 1) }
+    static var nsInk: NSColor { NSColor(calibratedRed: 0.12, green: 0.09, blue: 0.07, alpha: 1) }
     static var nsTerracotta: NSColor { NSColor(calibratedRed: 0.773, green: 0.455, blue: 0.365, alpha: 1) }
     static var nsWoodLight: NSColor { NSColor(calibratedRed: 0.914, green: 0.792, blue: 0.612, alpha: 1) }
     static var nsWoodMid: NSColor { NSColor(calibratedRed: 0.843, green: 0.690, blue: 0.502, alpha: 1) }
@@ -113,6 +114,18 @@ struct StrengthSlider: View {
     }
 }
 
+extension View {
+    /// Кремовая поверхность: светлая схема + явные чернила, чтобы подписи не стали белыми в Dark Mode.
+    func creamSurface() -> some View {
+        self
+            .foregroundColor(Theme.ink)
+            .accentColor(Theme.terracotta)
+            .colorScheme(.light)
+            .environment(\.colorScheme, .light)
+            .preferredColorScheme(.light)
+    }
+}
+
 struct WindowAccessor: NSViewRepresentable {
     var onResolve: (NSWindow) -> Void
 
@@ -120,6 +133,7 @@ struct WindowAccessor: NSViewRepresentable {
         let view = NSView()
         DispatchQueue.main.async {
             if let window = view.window {
+                Self.applyLightAppearance(window)
                 onResolve(window)
             }
         }
@@ -128,7 +142,13 @@ struct WindowAccessor: NSViewRepresentable {
 
     func updateNSView(_ nsView: NSView, context: Context) {
         if let window = nsView.window {
+            Self.applyLightAppearance(window)
             onResolve(window)
         }
+    }
+
+    private static func applyLightAppearance(_ window: NSWindow) {
+        window.appearance = NSAppearance(named: .aqua)
+        window.backgroundColor = Theme.nsCream
     }
 }

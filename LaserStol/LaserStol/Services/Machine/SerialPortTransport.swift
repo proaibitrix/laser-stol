@@ -80,6 +80,7 @@ final class SerialPortTransport: GRBLTransport {
         var paused: Bool
         var cancelled: Bool
         var waitingOK: Bool
+        var bytesWritten: Int
         var onProgress: (Double, String) -> Void
         var completion: (Result<Void, Error>) -> Void
     }
@@ -158,6 +159,7 @@ final class SerialPortTransport: GRBLTransport {
                 paused: false,
                 cancelled: false,
                 waitingOK: false,
+                bytesWritten: 0,
                 onProgress: onProgress,
                 completion: completion
             )
@@ -172,6 +174,9 @@ final class SerialPortTransport: GRBLTransport {
     private func openPort() throws {
         closePort()
         let path = port.path
+        guard FileManager.default.fileExists(atPath: path) else {
+            throw GRBLTransportError.openFailed("нет файла порта \(path)")
+        }
         let opened = path.withCString { Darwin.open($0, O_RDWR | O_NOCTTY | O_NONBLOCK) }
         guard opened >= 0 else {
             throw GRBLTransportError.openFailed(String(cString: strerror(errno)))
@@ -220,14 +225,20 @@ final class SerialPortTransport: GRBLTransport {
         stream = nil
     }
 
-    private func writeLine(_ line: String) {
+    @discardableResult
+    private func writeLine(_ line: String) -> Int {
+        guard fd >= 0 else { return -1 }
         var payload = line
         if !payload.hasSuffix("\n") { payload.append("\n") }
-        guard let data = payload.data(using: .utf8) else { return }
-        data.withUnsafeBytes { raw in
-            guard let ptr = raw.baseAddress else { return }
-            _ = Darwin.write(self.fd, ptr, raw.count)
+        guard let data = payload.data(using: .utf8) else { return -1 }
+        let written = data.withUnsafeBytes { raw -> Int in
+            guard let ptr = raw.baseAddress else { return -1 }
+            return Darwin.write(self.fd, ptr, raw.count)
         }
+        if written > 0 {
+            stream?.bytesWritten += written
+        }
+        return written
     }
 
     private func readAvailable() {
@@ -267,8 +278,13 @@ final class SerialPortTransport: GRBLTransport {
         if state.cancelled { return }
         if state.paused || state.waitingOK { return }
         if state.index >= state.lines.count {
+            let written = state.bytesWritten
             stream = nil
-            DispatchQueue.main.async { state.completion(.success(())) }
+            if written <= 0 {
+                DispatchQueue.main.async { state.completion(.failure(GRBLTransportError.emptyStream)) }
+            } else {
+                DispatchQueue.main.async { state.completion(.success(())) }
+            }
             return
         }
         let line = state.lines[state.index]
@@ -284,6 +300,11 @@ final class SerialPortTransport: GRBLTransport {
             pumpStream()
             return
         }
-        writeLine(line)
+        let n = writeLine(line)
+        if n <= 0 {
+            stream = nil
+            let err = GRBLTransportError.writeFailed(String(cString: strerror(errno)))
+            DispatchQueue.main.async { state.completion(.failure(err)) }
+        }
     }
 }

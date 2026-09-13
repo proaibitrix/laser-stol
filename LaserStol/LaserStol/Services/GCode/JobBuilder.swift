@@ -260,7 +260,7 @@ extension GCodeGenerator {
         let w = max(1, Int((rect.width / mmPerPixel).rounded()))
         let h = max(1, Int((rect.height / mmPerPixel).rounded()))
         var lum = [UInt8](repeating: 255, count: w * h)
-        var opq = [Bool](repeating: true, count: w * h)
+        let opq = [Bool](repeating: true, count: w * h)
         let cx = Double(w) / 2
         let cy = Double(h) / 2
         let rx = max(0.5, Double(w) / 2 - 0.5)
