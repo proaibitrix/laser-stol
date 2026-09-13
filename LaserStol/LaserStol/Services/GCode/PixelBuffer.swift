@@ -36,6 +36,18 @@ struct PixelBuffer: Equatable {
         return invert ? !isDark : isDark
     }
 
+    func burnPixelCount(threshold: Double, invert: Bool) -> Int {
+        var n = 0
+        for y in 0..<height {
+            for x in 0..<width {
+                if shouldBurn(x: x, y: y, threshold: threshold, invert: invert) {
+                    n += 1
+                }
+            }
+        }
+        return n
+    }
+
     func flippedHorizontally() -> PixelBuffer {
         var lum = [UInt8](repeating: 0, count: luminance.count)
         var opq = [Bool](repeating: false, count: opaque.count)

@@ -1,4 +1,5 @@
 import XCTest
+import AppKit
 @testable import LaserStol
 
 final class GeometryTests: XCTestCase {
@@ -168,11 +169,181 @@ final class DocumentTests: XCTestCase {
 
     func testJobBuilderWholeSheet() {
         let demo = DemoProject.make()
-        let job = JobBuilder.build(document: demo, settings: JobSettings(), pixelsForItem: { _ in nil })
+        let stub = PixelBuffer.filled(width: 8, height: 8, value: 0)
+        let job = JobBuilder.build(document: demo, settings: JobSettings(), pixelsForItem: { item in
+            switch item.content {
+            case .text, .image, .monogram: return stub
+            default: return nil
+            }
+        })
+        XCTAssertTrue(job.errors.isEmpty)
         XCTAssertTrue(job.gcode.contains("G90"))
         XCTAssertTrue(job.gcode.contains("Слой Рез") || job.gcode.contains("G1"))
         XCTAssertGreaterThan(job.lineCount, 20)
         XCTAssertGreaterThan(job.estimatedSeconds, 0)
+        XCTAssertEqual(job.burnTextCount, 25)
+        XCTAssertTrue(job.preflightSummary.contains("Прожиг: 25 объектов"))
+        XCTAssertTrue(job.preflightSummary.contains("текст: 25"))
+    }
+
+    func testJobBuilderBurnsImportedImage() {
+        var doc = ProjectDocument()
+        doc.ensureDefaultLayers()
+        let png = TestImages.blackSquarePNG()
+        doc.upsert(DesignItem(
+            layerID: doc.layer(kind: .burn)!.id,
+            name: "фото",
+            transform: ItemTransform(centerX: 50, centerY: 50, width: 20, height: 20),
+            content: .image(ImagePayload(pngData: png, originalName: "shot.png"))
+        ))
+        let job = JobBuilder.build(
+            document: doc,
+            settings: JobSettings(scope: .burnLayer),
+            pixelsForItem: { item in
+                if case .image(let payload) = item.content {
+                    return ImageProcessor.pixelBuffer(pngData: payload.pngData, maxEdge: 32)
+                }
+                return nil
+            }
+        )
+        XCTAssertTrue(job.errors.isEmpty, job.errors.joined(separator: "; "))
+        XCTAssertEqual(job.burnItemCount, 1)
+        XCTAssertEqual(job.burnImageCount, 1)
+        XCTAssertEqual(job.burnTextCount, 0)
+        XCTAssertTrue(job.gcode.contains("G1"))
+        XCTAssertTrue(job.preflightSummary.contains("изображений: 1"))
+    }
+
+    func testJobBuilderBurnsUserText() {
+        var doc = ProjectDocument()
+        doc.ensureDefaultLayers()
+        doc.upsert(DesignItem(
+            layerID: doc.layer(kind: .burn)!.id,
+            name: "Привет",
+            transform: ItemTransform(centerX: 80, centerY: 80, width: 40, height: 22),
+            content: .text(TextPayload(text: "Привет"))
+        ))
+        let job = JobBuilder.build(
+            document: doc,
+            settings: JobSettings(scope: .burnLayer),
+            pixelsForItem: { item in
+                if case .text(let payload) = item.content {
+                    let ns = ImageProcessor.renderText(payload, size: NSSize(width: 200, height: 100))
+                    return ImageProcessor.pixelBuffer(image: ns, maxEdge: 80)
+                }
+                return nil
+            }
+        )
+        XCTAssertTrue(job.errors.isEmpty, job.errors.joined(separator: "; "))
+        XCTAssertEqual(job.burnTextCount, 1)
+        XCTAssertTrue(job.gcode.contains("G1"))
+        XCTAssertTrue(job.preflightSummary.contains("текст: 1"))
+    }
+
+    func testJobBuilderIncludesOrphanImage() {
+        var doc = ProjectDocument()
+        doc.ensureDefaultLayers()
+        let png = TestImages.blackSquarePNG()
+        doc.upsert(DesignItem(
+            layerID: UUID(),
+            name: "сирота",
+            transform: ItemTransform(centerX: 40, centerY: 40, width: 16, height: 16),
+            content: .image(ImagePayload(pngData: png, originalName: "orphan.png"))
+        ))
+        let job = JobBuilder.build(
+            document: doc,
+            settings: JobSettings(scope: .burnLayer),
+            pixelsForItem: { item in
+                if case .image(let payload) = item.content {
+                    return ImageProcessor.pixelBuffer(pngData: payload.pngData, maxEdge: 24)
+                }
+                return nil
+            }
+        )
+        XCTAssertEqual(job.burnImageCount, 1)
+        XCTAssertTrue(job.errors.isEmpty, job.errors.joined(separator: "; "))
+        XCTAssertTrue(job.gcode.contains("G1"))
+    }
+
+    func testJobBuilderErrorsWhenImageHasNoPixels() {
+        var doc = ProjectDocument()
+        doc.ensureDefaultLayers()
+        doc.upsert(DesignItem(
+            layerID: doc.layer(kind: .burn)!.id,
+            name: "пустое",
+            transform: ItemTransform(centerX: 50, centerY: 50, width: 20, height: 20),
+            content: .image(ImagePayload(pngData: Data(), originalName: "empty.png"))
+        ))
+        let job = JobBuilder.build(
+            document: doc,
+            settings: JobSettings(scope: .burnLayer),
+            pixelsForItem: { _ in nil }
+        )
+        XCTAssertFalse(job.canStart)
+        XCTAssertEqual(job.errors.count, 1)
+        XCTAssertTrue(job.errors[0].contains("пустое"))
+        XCTAssertFalse(job.gcode.contains("G1"))
+    }
+
+    func testJobBuilderErrorsWhenRasterIsWhite() {
+        var doc = ProjectDocument()
+        doc.ensureDefaultLayers()
+        doc.upsert(DesignItem(
+            layerID: doc.layer(kind: .burn)!.id,
+            name: "светлое",
+            transform: ItemTransform(centerX: 50, centerY: 50, width: 20, height: 20),
+            content: .image(ImagePayload(pngData: Data([0x00]), originalName: "white.png"))
+        ))
+        let white = PixelBuffer.filled(width: 8, height: 8, value: 255)
+        let job = JobBuilder.build(
+            document: doc,
+            settings: JobSettings(scope: .burnLayer),
+            pixelsForItem: { _ in white }
+        )
+        XCTAssertFalse(job.canStart)
+        XCTAssertTrue(job.errors[0].contains("светлое"))
+        XCTAssertTrue(job.errors[0].contains("нет точек прожига"))
+    }
+
+    func testPixelBufferIgnoresZeroNSImageSize() {
+        let png = TestImages.blackSquarePNG()
+        let image = NSImage(data: png)!
+        image.size = .zero
+        let buffer = ImageProcessor.pixelBuffer(image: image, maxEdge: 32)
+        XCTAssertNotNil(buffer)
+        XCTAssertGreaterThan(buffer!.burnPixelCount(threshold: 0.5, invert: false), 0)
+    }
+
+    func testPixelBufferFromPNGData() {
+        let png = TestImages.blackSquarePNG()
+        let buffer = ImageProcessor.pixelBuffer(pngData: png, maxEdge: 32)
+        XCTAssertNotNil(buffer)
+        XCTAssertGreaterThan(buffer!.burnPixelCount(threshold: 0.5, invert: false), 0)
+    }
+}
+
+enum TestImages {
+    static func blackSquarePNG() -> Data {
+        let width = 16
+        let height = 16
+        let rep = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: width,
+            pixelsHigh: height,
+            bitsPerSample: 8,
+            samplesPerPixel: 4,
+            hasAlpha: true,
+            isPlanar: false,
+            colorSpaceName: .deviceRGB,
+            bytesPerRow: width * 4,
+            bitsPerPixel: 32
+        )!
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
+        NSColor.black.setFill()
+        NSBezierPath.fill(NSRect(x: 0, y: 0, width: width, height: height))
+        NSGraphicsContext.restoreGraphicsState()
+        return rep.representation(using: .png, properties: [:])!
     }
 }
 

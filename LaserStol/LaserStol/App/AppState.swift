@@ -210,9 +210,8 @@ final class AppState: ObservableObject {
     }
 
     func addText(_ text: String) {
-        let payload = TextPayload(text: text)
-        let image = ImageProcessor.renderText(payload, size: NSSize(width: 400, height: 220))
-        let png = ImageProcessor.pngData(from: image) ?? Data()
+        // Храним как .text, а не PNG: растр строится в момент задания.
+        // PNG-снимок часто давал NSImage.size == 0 и пустой G-code.
         let item = DesignItem(
             layerID: layerID(for: .burn),
             name: text,
@@ -222,7 +221,7 @@ final class AppState: ObservableObject {
                 width: 70,
                 height: 38
             ),
-            content: .image(ImagePayload(pngData: png, originalName: text))
+            content: .text(TextPayload(text: text, fontName: "Times New Roman", fontSizePT: 48))
         )
         document.upsert(item)
         selectedIDs = [item.id]
@@ -232,8 +231,6 @@ final class AppState: ObservableObject {
     func addMonogram(_ symbol: MonogramSymbol) {
         document.ensureDefaultLayers()
         if symbol.strokes.isEmpty {
-            let image = ImageProcessor.renderMonogram(symbol, size: NSSize(width: 360, height: 360))
-            let png = ImageProcessor.pngData(from: image) ?? Data()
             let item = DesignItem(
                 layerID: layerID(for: .burn),
                 name: "Монограмма \(symbol.title)",
@@ -243,7 +240,7 @@ final class AppState: ObservableObject {
                     width: 60,
                     height: 60
                 ),
-                content: .image(ImagePayload(pngData: png, originalName: symbol.title))
+                content: .monogram(MonogramPayload(symbolID: symbol.id, letters: symbol.letters))
             )
             document.upsert(item)
             selectedIDs = [item.id]
@@ -354,26 +351,31 @@ final class AppState: ObservableObject {
     func pixels(for item: DesignItem) -> PixelBuffer? {
         switch item.content {
         case .image(let image):
-            return ImageProcessor.pixelBuffer(
+            if let buffer = ImageProcessor.pixelBuffer(
                 pngData: image.pngData,
-                maxEdge: 220,
+                maxEdge: 280,
                 threshold: image.threshold,
                 invert: image.invert
-            )
+            ) {
+                return buffer
+            }
+            guard let ns = ImageProcessor.nsImage(from: image.pngData) else { return nil }
+            return ImageProcessor.pixelBuffer(image: ns, maxEdge: 280)
         case .text(let text):
-            let ns = ImageProcessor.renderText(text, size: NSSize(width: 240, height: 240))
-            return ImageProcessor.pixelBuffer(image: ns, maxEdge: 72)
+            let ns = ImageProcessor.renderText(text, size: NSSize(width: 480, height: 280))
+            return ImageProcessor.pixelBuffer(image: ns, maxEdge: 180)
         case .monogram(let mono):
-            guard let symbol = MonogramLibrary.symbol(id: mono.symbolID) else { return nil }
-            let ns = ImageProcessor.renderMonogram(symbol, size: NSSize(width: 260, height: 260))
-            return ImageProcessor.pixelBuffer(image: ns, maxEdge: 96)
+            let symbol = MonogramLibrary.symbol(id: mono.symbolID)
+                ?? MonogramSymbol(id: mono.symbolID, title: mono.letters, letters: mono.letters, strokes: [])
+            let ns = ImageProcessor.renderMonogram(symbol, size: NSSize(width: 360, height: 360))
+            return ImageProcessor.pixelBuffer(image: ns, maxEdge: 160)
         default:
             return nil
         }
     }
 
     func confirmStart() {
-        guard let job = lastJob else { return }
+        guard let job = lastJob, job.canStart else { return }
         sheet = .running
         machine.run(job: job)
     }

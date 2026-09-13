@@ -115,12 +115,32 @@ struct PreflightView: View {
             )
 
             if let job = app.lastJob {
+                Text(job.preflightSummary)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(Theme.ink)
+                    .fixedSize(horizontal: false, vertical: true)
                 Text("Оценка времени: \(TimeEstimator.formatDuration(job.estimatedSeconds))")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(Theme.ink)
                 Text("Строк G-code: \(job.lineCount)")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(Theme.mute)
+                if !job.errors.isEmpty {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Нельзя начать: пустой прожиг")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(Theme.stop)
+                        ForEach(job.errors, id: \.self) { error in
+                            Text(error)
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(Theme.stop)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .padding(8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Theme.terracottaSoft))
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -163,6 +183,8 @@ struct PreflightView: View {
                 }
             }
             .buttonStyle(CompactButtonStyle(prominent: true))
+            .disabled(app.lastJob?.canStart == false)
+            .opacity(app.lastJob?.canStart == false ? 0.45 : 1)
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 14)

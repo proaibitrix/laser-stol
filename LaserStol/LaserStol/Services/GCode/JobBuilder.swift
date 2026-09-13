@@ -35,17 +35,34 @@ enum JobBuilder {
         let includeBurn = settings.scope == .burnLayer || settings.scope == .wholeSheet
         let includeCut = settings.scope == .cutLayer || settings.scope == .wholeSheet
 
-        if includeBurn, let layer = document.layer(kind: .burn), layer.isVisible {
-            let (power, speed) = GCodeGenerator.applyStrength(
-                power: layer.powerPercent > 0 ? layer.powerPercent : material.burnPowerPercent,
-                speed: layer.speedMMPerMin > 0 ? layer.speedMMPerMin : material.burnSpeedMMPerMin,
-                settings: settings
-            )
-            lines.append("; Слой Прожиг  S~\(GCodeGenerator.spindle(power, max: options.maxSpindle))  F\(Int(speed))")
-            for item in document.items(on: layer.id) {
-                let chunk = burnLines(item: item, power: power, speed: speed, pixels: pixelsForItem(item), options: options)
-                lines.append(contentsOf: chunk)
-                burnMM += polylineLength(from: chunk)
+        var burnItemCount = 0
+        var burnImageCount = 0
+        var burnTextCount = 0
+        var errors: [String] = []
+
+        if includeBurn {
+            let burnCandidates = burnItems(from: document)
+            if !burnCandidates.isEmpty {
+                let layer = document.layer(kind: .burn)
+                let (power, speed) = GCodeGenerator.applyStrength(
+                    power: (layer?.powerPercent ?? 0) > 0 ? (layer?.powerPercent ?? material.burnPowerPercent) : material.burnPowerPercent,
+                    speed: (layer?.speedMMPerMin ?? 0) > 0 ? (layer?.speedMMPerMin ?? material.burnSpeedMMPerMin) : material.burnSpeedMMPerMin,
+                    settings: settings
+                )
+                lines.append("; Слой Прожиг  S~\(GCodeGenerator.spindle(power, max: options.maxSpindle))  F\(Int(speed))")
+                for item in burnCandidates {
+                    countBurnContent(item, items: &burnItemCount, images: &burnImageCount, texts: &burnTextCount)
+                    let chunk = burnLines(
+                        item: item,
+                        power: power,
+                        speed: speed,
+                        pixels: pixelsForItem(item),
+                        options: options,
+                        errors: &errors
+                    )
+                    lines.append(contentsOf: chunk)
+                    burnMM += polylineLength(from: chunk)
+                }
             }
         }
 
@@ -78,8 +95,51 @@ enum JobBuilder {
             cutDistanceMM: dist.cutMM,
             travelDistanceMM: dist.travelMM,
             estimatedSeconds: seconds,
-            bounds: document.allItemsBounds()
+            bounds: document.allItemsBounds(),
+            burnItemCount: burnItemCount,
+            burnImageCount: burnImageCount,
+            burnTextCount: burnTextCount,
+            errors: errors
         )
+    }
+
+    /// Все видимые объекты прожига: слой Прожиг + «осиротевшие» картинки/текст/монограммы.
+    static func burnItems(from document: ProjectDocument) -> [DesignItem] {
+        let visibleBurnIDs = Set(document.layers.filter { $0.kind == .burn && $0.isVisible }.map(\.id))
+        let cutIDs = Set(document.layers.filter { $0.kind == .cut }.map(\.id))
+        let knownIDs = Set(document.layers.map(\.id))
+        return document.items.filter { item in
+            if visibleBurnIDs.contains(item.layerID) {
+                return true
+            }
+            switch item.content {
+            case .image, .text, .monogram:
+                if cutIDs.contains(item.layerID) { return false }
+                return !knownIDs.contains(item.layerID)
+            default:
+                return false
+            }
+        }
+    }
+
+    private static func countBurnContent(
+        _ item: DesignItem,
+        items: inout Int,
+        images: inout Int,
+        texts: inout Int
+    ) {
+        switch item.content {
+        case .image:
+            items += 1
+            images += 1
+        case .text, .monogram:
+            items += 1
+            texts += 1
+        case .shape:
+            items += 1
+        case .freehand:
+            break
+        }
     }
 
     private static func burnLines(
@@ -87,16 +147,21 @@ enum JobBuilder {
         power: Double,
         speed: Double,
         pixels: PixelBuffer?,
-        options: GCodeOptions
+        options: GCodeOptions,
+        errors: inout [String]
     ) -> [String] {
         switch item.content {
         case .image, .text, .monogram:
+            if let error = rasterFailure(item: item, pixels: pixels) {
+                errors.append(error)
+                return []
+            }
             guard var buffer = pixels else { return [] }
             if item.transform.flipHorizontal { buffer = buffer.flippedHorizontally() }
             if item.transform.flipVertical { buffer = buffer.flippedVertically() }
             let bounds = item.transform.bounds
             let mmPerPixel = bounds.width / Double(max(buffer.width, 1))
-            return GCodeGenerator.raster(
+            let chunk = GCodeGenerator.raster(
                 buffer: buffer,
                 origin: bounds.origin,
                 mmPerPixel: mmPerPixel,
@@ -106,6 +171,11 @@ enum JobBuilder {
                 invert: item.effectiveInvert,
                 options: options
             )
+            if !hasBurnMove(chunk) {
+                errors.append("«\(itemLabel(item))»: G-code прожига пуст")
+                return []
+            }
+            return chunk
         case .shape(let shape):
             if shape.kind == .rectangle || shape.kind == .tagRectangle {
                 return GCodeGenerator.rasterFilledRect(
@@ -126,6 +196,43 @@ enum JobBuilder {
         case .freehand:
             return []
         }
+    }
+
+    private static func rasterFailure(item: DesignItem, pixels: PixelBuffer?) -> String? {
+        let kind: String
+        switch item.content {
+        case .image: kind = "изображение"
+        case .text: kind = "текст"
+        case .monogram: kind = "монограмма"
+        default: return nil
+        }
+        let name = itemLabel(item)
+        guard let pixels = pixels else {
+            return "«\(name)»: нет растра — \(kind) не декодировалось"
+        }
+        if pixels.width < 1 || pixels.height < 1 {
+            return "«\(name)»: пустой растр"
+        }
+        let count = pixels.burnPixelCount(threshold: item.effectiveThreshold, invert: item.effectiveInvert)
+        if count == 0 {
+            return "«\(name)»: после порога нет точек прожига (проверьте контраст или инверсию)"
+        }
+        return nil
+    }
+
+    private static func itemLabel(_ item: DesignItem) -> String {
+        let trimmed = item.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? "без имени" : trimmed
+    }
+
+    private static func hasBurnMove(_ lines: [String]) -> Bool {
+        for line in lines {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            if trimmed.hasPrefix("G1") || trimmed.hasPrefix("G01") {
+                return true
+            }
+        }
+        return false
     }
 
     private static func cutLines(

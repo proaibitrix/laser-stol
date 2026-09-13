@@ -27,6 +27,52 @@ struct GeneratedJob: Equatable {
     var travelDistanceMM: Double
     var estimatedSeconds: Double
     var bounds: MMRect?
+    var burnItemCount: Int
+    var burnImageCount: Int
+    var burnTextCount: Int
+    var errors: [String]
+    var warnings: [String]
+    var preflightSummary: String
+
+    var canStart: Bool { errors.isEmpty }
+
+    init(
+        gcode: String,
+        lineCount: Int,
+        burnDistanceMM: Double,
+        cutDistanceMM: Double,
+        travelDistanceMM: Double,
+        estimatedSeconds: Double,
+        bounds: MMRect?,
+        burnItemCount: Int = 0,
+        burnImageCount: Int = 0,
+        burnTextCount: Int = 0,
+        errors: [String] = [],
+        warnings: [String] = [],
+        preflightSummary: String? = nil
+    ) {
+        self.gcode = gcode
+        self.lineCount = lineCount
+        self.burnDistanceMM = burnDistanceMM
+        self.cutDistanceMM = cutDistanceMM
+        self.travelDistanceMM = travelDistanceMM
+        self.estimatedSeconds = estimatedSeconds
+        self.bounds = bounds
+        self.burnItemCount = burnItemCount
+        self.burnImageCount = burnImageCount
+        self.burnTextCount = burnTextCount
+        self.errors = errors
+        self.warnings = warnings
+        self.preflightSummary = preflightSummary ?? GeneratedJob.makePreflightSummary(
+            items: burnItemCount,
+            images: burnImageCount,
+            texts: burnTextCount
+        )
+    }
+
+    static func makePreflightSummary(items: Int, images: Int, texts: Int) -> String {
+        "Прожиг: \(items) объектов (из них изображений: \(images), текст: \(texts))"
+    }
 }
 
 enum GCodeGenerator {
