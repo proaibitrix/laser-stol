@@ -17,7 +17,7 @@ enum TimeEstimator {
         var cut = 0.0
         var travel = 0.0
         var dwell = 0.0
-        var lastPower = 0
+        var lastPower = 0.0
 
         for raw in gcode.split(whereSeparator: { $0.isNewline }) {
             let line = stripComment(String(raw)).trimmingCharacters(in: .whitespaces)
@@ -34,7 +34,7 @@ enum TimeEstimator {
                 continue
             }
             if let s = parseWord(upper, "S"), upper.contains("S") && !upper.hasPrefix("G") {
-                lastPower = Int(s)
+                lastPower = s
                 laserOn = lastPower > 0
             }
             if let f = parseWord(upper, "F") {
