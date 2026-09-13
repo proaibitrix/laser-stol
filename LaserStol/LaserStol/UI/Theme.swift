@@ -183,7 +183,24 @@ final class WindowDragView: NSView {
 
     override func mouseDown(with event: NSEvent) {
         let loc = convert(event.locationInWindow, from: nil)
-        guard loc.x >= leadingReserved else { return }
-        window?.performWindowDrag(with: event)
+        guard loc.x >= leadingReserved, let window = window else { return }
+        // Не вызываем NSWindow.performWindowDrag(with:) — в SDK Xcode 14.2 / macOS 12
+        // у NSWindow нет этого члена (Swift overlay). Двигаем frame по экранным координатам.
+        let startMouse = NSEvent.mouseLocation
+        let startOrigin = window.frame.origin
+        while true {
+            guard let next = window.nextEvent(
+                matching: [.leftMouseDragged, .leftMouseUp],
+                until: Date.distantFuture,
+                inMode: .eventTracking,
+                dequeue: true
+            ) else { break }
+            if next.type == .leftMouseUp { break }
+            let now = NSEvent.mouseLocation
+            window.setFrameOrigin(NSPoint(
+                x: startOrigin.x + (now.x - startMouse.x),
+                y: startOrigin.y + (now.y - startMouse.y)
+            ))
+        }
     }
 }
