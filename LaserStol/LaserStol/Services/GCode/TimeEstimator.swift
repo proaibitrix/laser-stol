@@ -114,7 +114,7 @@ enum TimeEstimator {
     /// Читает первое слово вроде X12.3 из строки.
     static func parseWord(_ line: String, _ letter: Character) -> Double? {
         let chars = Array(line.uppercased())
-        let target = Character(letter.uppercased().first ?? letter)
+        let target = letter.uppercased().first ?? letter
         var i = 0
         while i < chars.count {
             if chars[i] == target {
